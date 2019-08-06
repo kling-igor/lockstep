@@ -3,7 +3,9 @@ import io from 'socket.io-client'
 
 const socket = io()
 
-export default () => {
+const Loader = PIXI.Loader.shared
+
+export default ({ app }) => {
   useEffect(() => {
     socket.on('connect', () => {
       console.log('CONNECTED as ', socket.id)
@@ -16,6 +18,11 @@ export default () => {
     })
     socket.on('disconnect', () => {
       console.log('DISCONNECTED')
+    })
+
+    Loader.add('images/sprite.png').load(() => {
+      let sprite = new PIXI.Sprite(Loader.resources['images/sprite.png'].texture)
+      app.stage.addChild(sprite)
     })
   }, [])
 
