@@ -5,6 +5,8 @@ import cors from 'cors'
 // import { join, resolve, basename, parse } from 'path'
 import SocketIO from 'socket.io'
 
+let connectedSockets = {}
+
 const app = express()
 app.use(morgan('dev'))
 app.use(cors())
@@ -23,11 +25,15 @@ httpServer.on('error', e => {
 let io = SocketIO(httpServer)
 io.on('connection', socket => {
   console.log('a user connected:', socket.id)
-  // connectedSockets[socket.id] = socket
+  connectedSockets[socket.id] = socket
 
   socket.on('disconnect', () => {
     console.log('user disconnected:', socket.id)
-    // delete connectedSockets[socket.id]
+    delete connectedSockets[socket.id]
+  })
+
+  socket.on('hello', msg => {
+    console.log('message: ' + msg)
   })
 })
 
