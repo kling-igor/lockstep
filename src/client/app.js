@@ -21,7 +21,7 @@ export default ({ app }) => {
     })
 
     Loader.add('images/sprite.png').load(() => {
-      let sprite = new PIXI.Sprite(Loader.resources['images/sprite.png'].texture)
+      const sprite = new PIXI.Sprite(Loader.resources['images/sprite.png'].texture)
       app.stage.addChild(sprite)
     })
   }, [])
