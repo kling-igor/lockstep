@@ -1,11 +1,43 @@
-import React, { useEffect } from 'react'
+import { hot } from 'react-hot-loader/root'
+import React, { useEffect, useState } from 'react'
+import { Route, NavLink, HashRouter, withRouter } from 'react-router-dom'
 import io from 'socket.io-client'
+
+import game from './game'
 
 const socket = io()
 
-const Loader = PIXI.Loader.shared
+const Login = withRouter(({ history }) => {
+  const [nickname, setNickname] = useState('')
 
-export default ({ app }) => {
+  const handleChange = ({ target: { value } }) => {
+    setNickname(value)
+  }
+
+  const handleSubmit = event => {
+    event.preventDefault()
+
+    if (nickname) {
+      history.replace('/other')
+    }
+  }
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <label>
+        Nickname:
+        <input type="text" value={nickname} onChange={handleChange} />
+      </label>
+      <input type="submit" value="Submit" />
+    </form>
+  )
+})
+
+const OtherPage = () => {
+  return <div style={{ height: '100%', backgroundColor: 'yellow' }} />
+}
+
+const App = ({ app }) => {
   useEffect(() => {
     socket.on('connect', () => {
       console.log('CONNECTED as ', socket.id)
@@ -20,21 +52,15 @@ export default ({ app }) => {
       console.log('DISCONNECTED')
     })
 
-    Loader.add('images/sprite.png').load(() => {
-      const sprite = new PIXI.Sprite(Loader.resources['images/sprite.png'].texture)
-      app.stage.addChild(sprite)
-    })
+    // game(app)
   }, [])
 
   return (
-    <button
-      type="button"
-      onClick={() => {
-        console.log('CLICK')
-        socket.emit('hello', 'world')
-      }}
-    >
-      JOIN
-    </button>
+    <HashRouter>
+      <Route exact path="/" component={Login} />
+      <Route path="/other" component={OtherPage} />
+    </HashRouter>
   )
 }
+
+export default hot(App)

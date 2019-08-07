@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon app/main.js --exec babel-node",
     "build:server": "babel -w src/server -d app --copy-files",
-    "build:client": "webpack --mode development --env.dev --config src/client/webpack.config.babel.js --watch"
+    "build:client": "NODE_ENV=production webpack --mode development --env.dev --config src/client/webpack.config.babel.js --watch"
   },
   "keywords": [],
   "author": "'Igor Kling' <\"klingiv@altarix.ru\">",
@@ -24,6 +24,7 @@
     "@babel/preset-react": "^7.0.0",
     "@babel/register": "^7.0.0",
     "@babel/runtime": "^7.4.3",
+    "@hot-loader/react-dom": "^16.8.6",
     "async": "^3.1.0",
     "babel-loader": "^8.0.5",
     "core-js": "^3.0.1",
@@ -33,6 +34,8 @@
     "nodemon": "^1.19.1",
     "react": "16.8.6",
     "react-dom": "^16.8.6",
+    "react-hot-loader": "^4.12.10",
+    "react-router-dom": "^5.0.1",
     "socket.io-client": "^2.2.0",
     "style-loader": "^0.23.1",
     "styled-components": "^4.1.3",

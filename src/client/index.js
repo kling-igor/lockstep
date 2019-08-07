@@ -1,7 +1,7 @@
 import React from 'react'
 import { render } from 'react-dom'
 import App from './app'
-
+/*
 //Create a Pixi Application
 const app = new PIXI.Application({
   width: 256, // default: 800
@@ -13,3 +13,6 @@ const app = new PIXI.Application({
 document.getElementById('game').appendChild(app.view)
 
 render(<App app={app} />, document.getElementById('lobby'))
+*/
+
+render(<App />, document.getElementById('lobby'))

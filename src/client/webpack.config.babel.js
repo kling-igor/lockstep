@@ -1,8 +1,10 @@
 import HTMLWebpackPlugin from 'html-webpack-plugin'
+import webpack from 'webpack'
 import { join } from 'path'
 
 module.exports = env => ({
-  entry: join(__dirname, 'index.js'),
+  // entry: join(__dirname, 'index.js'),
+  entry: ['react-hot-loader/patch', join(__dirname, 'index.js')],
   output: {
     filename: 'bundle.js',
     path: join(__dirname, '../../app')
@@ -21,6 +23,9 @@ module.exports = env => ({
   },
 
   plugins: [
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify('production')
+    }),
     new HTMLWebpackPlugin({
       filename: 'index.html',
       template: join(__dirname, 'index.html'),
