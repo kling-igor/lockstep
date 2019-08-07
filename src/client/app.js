@@ -18,7 +18,7 @@ const Login = withRouter(({ history }) => {
     event.preventDefault()
 
     if (nickname) {
-      history.replace('/other')
+      history.replace('/lobby')
     }
   }
 
@@ -28,13 +28,48 @@ const Login = withRouter(({ history }) => {
         Nickname:
         <input type="text" value={nickname} onChange={handleChange} />
       </label>
-      <input type="submit" value="Submit" />
+      <input disabled={!nickname} type="submit" value="Submit" />
     </form>
   )
 })
 
-const OtherPage = () => {
-  return <div style={{ height: '100%', backgroundColor: 'yellow' }} />
+const Lobby = () => {
+  const [message, setMessage] = useState('')
+
+  const handleChange = ({ target: { value } }) => {
+    setMessage(value)
+  }
+
+  const handleSubmit = event => {
+    event.preventDefault()
+
+    if (message) {
+      // socket.send()
+    }
+  }
+  return (
+    <div
+      style={{
+        height: '100%',
+        backgroundColor: 'yellow',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
+        alignItems: 'flex-start'
+      }}
+    >
+      <div style={{ height: '100%', width: '100%', backgroundColor: 'green' }} />
+      <form onSubmit={handleSubmit} style={{ position: 'absolute', left: 0, bottom: 0 }}>
+        <input
+          type="text"
+          value={message}
+          onChange={handleChange}
+          style={{ boxSizing: 'border-box', width: '300px', margin: 5 }}
+        />
+        <input disabled={!message} type="submit" value="Send" />
+      </form>
+    </div>
+  )
 }
 
 const App = ({ app }) => {
@@ -58,7 +93,7 @@ const App = ({ app }) => {
   return (
     <HashRouter>
       <Route exact path="/" component={Login} />
-      <Route path="/other" component={OtherPage} />
+      <Route path="/lobby" component={Lobby} />
     </HashRouter>
   )
 }
