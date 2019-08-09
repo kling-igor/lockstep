@@ -45,7 +45,7 @@ const Lobby = withRouter(({ history, socket }) => {
       <div style={{ height: '100%', width: '100%', backgroundColor: 'green' }}>
         <ul style={{ listStyle: 'none' }}>
           {messages.map(message => {
-            const { sender, text, time } = message
+            const { sender = 'System', text, time } = message
             return <li key={`${sender}${time}`}>{`${sender}: ${text} (${moment.unix(time).format('HH:mm')})`}</li>
           })}
         </ul>
