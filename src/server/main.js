@@ -4,6 +4,7 @@ import morgan from 'morgan'
 import cors from 'cors'
 // import { join, resolve, basename, parse } from 'path'
 import SocketIO from 'socket.io'
+import moment from 'moment'
 
 let connectedSockets = {}
 
@@ -22,11 +23,17 @@ httpServer.on('error', e => {
   }
 })
 
+const io = SocketIO(httpServer)
+
 // users online
 const users = []
 
 const findUserByNick = nick => {
   return users.find(user => user.nick === nick)
+}
+
+const findUserById = id => {
+  return users.find(user => user.id === id)
 }
 
 const login = (socket, nick, fn) => {
@@ -35,9 +42,20 @@ const login = (socket, nick, fn) => {
     fn(false)
   }
 
-  fn(true)
+  users.push({ nick, id: socket.id })
 
-  users.push({ nick })
+  fn(true)
+}
+
+const lobbyMessage = (socket, message, fn) => {
+  const user = findUserById(socket.id)
+  if (user) {
+    fn(true)
+    io.emit('lobby:broadcast:message', { sender: user.nick, text: message, time: moment().unix() })
+  } else {
+    console.error('got message from unregistered socket')
+    fn(false)
+  }
 }
 
 const logout = socket => {
@@ -47,7 +65,8 @@ const logout = socket => {
 
 const messageHandlers = {
   disconnect: logout,
-  'user:login': login
+  'user:login': login,
+  'lobby:send:message': lobbyMessage
 }
 
 const socketHandler = socket => {
@@ -59,5 +78,5 @@ const socketHandler = socket => {
   }
 }
 
-SocketIO(httpServer).on('connection', socketHandler)
+io.on('connection', socketHandler)
 httpServer.listen(8888, () => {})
