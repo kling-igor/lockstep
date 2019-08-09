@@ -1,39 +1,55 @@
 import { hot } from 'react-hot-loader/root'
 import React, { useEffect, useState } from 'react'
 import { Route, NavLink, HashRouter, withRouter } from 'react-router-dom'
-import io from 'socket.io-client'
 
 import game from './game'
 
-const socket = io()
-
-const Login = withRouter(({ history }) => {
+const Login = withRouter(({ history, socket }) => {
   const [nickname, setNickname] = useState('')
+
+  const [error, setError] = useState(false)
 
   const handleChange = ({ target: { value } }) => {
     setNickname(value)
+    setError(false)
   }
 
   const handleSubmit = event => {
     event.preventDefault()
 
     if (nickname) {
-      history.replace('/lobby')
+      socket.emit('user:login', nickname, success => {
+        if (success) {
+          history.replace('/lobby')
+        } else {
+          setError(true)
+        }
+      })
     }
+  }
+
+  const errorStyle = {
+    backgroundColor: 'red',
+    color: 'white'
+  }
+
+  const normalStyle = {
+    backgroundColor: 'white',
+    color: 'black'
   }
 
   return (
     <form onSubmit={handleSubmit}>
       <label>
         Nickname:
-        <input type="text" value={nickname} onChange={handleChange} />
+        <input type="text" value={nickname} onChange={handleChange} style={error ? errorStyle : normalStyle} />
       </label>
       <input disabled={!nickname} type="submit" value="Submit" />
     </form>
   )
 })
 
-const Lobby = () => {
+const Lobby = ({ socket }) => {
   const [message, setMessage] = useState('')
 
   const handleChange = ({ target: { value } }) => {
@@ -44,7 +60,7 @@ const Lobby = () => {
     event.preventDefault()
 
     if (message) {
-      // socket.send()
+      // socket.send('login', )
     }
   }
   return (
@@ -72,7 +88,7 @@ const Lobby = () => {
   )
 }
 
-const App = ({ app }) => {
+const App = ({ app, socket }) => {
   useEffect(() => {
     socket.on('connect', () => {
       console.log('CONNECTED as ', socket.id)
@@ -92,8 +108,8 @@ const App = ({ app }) => {
 
   return (
     <HashRouter>
-      <Route exact path="/" component={Login} />
-      <Route path="/lobby" component={Lobby} />
+      <Route exact path="/" component={() => <Login socket={socket} />} />
+      <Route path="/lobby" component={() => <Lobby socket={socket} />} />
     </HashRouter>
   )
 }
