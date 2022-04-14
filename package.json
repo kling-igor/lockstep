@@ -25,7 +25,7 @@
     "@babel/register": "^7.0.0",
     "@babel/runtime": "^7.4.3",
     "@hot-loader/react-dom": "^16.8.6",
-    "async": "^3.1.0",
+    "async": "^3.2.2",
     "babel-loader": "^8.0.5",
     "core-js": "^3.0.1",
     "css-loader": "^2.1.1",
