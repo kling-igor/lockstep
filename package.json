@@ -47,7 +47,7 @@
   "dependencies": {
     "cors": "^2.8.5",
     "event-kit": "^2.5.3",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "http": "0.0.0",
     "moment": "^2.24.0",
     "morgan": "^1.9.1",
